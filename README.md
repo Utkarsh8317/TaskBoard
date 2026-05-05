@@ -66,7 +66,9 @@ Frontend runs on `http://localhost:5173` (or next available port).
 Frontend uses:
 
 - `VITE_API_URL` if defined
-- otherwise defaults to `http://localhost:5000`
+- otherwise:
+  - `http://localhost:5000` on local machine
+  - same-origin API in production
 
 Optional `.env` in `frontend/`:
 
@@ -109,3 +111,27 @@ VITE_API_URL=http://127.0.0.1:5000
 
 - SQLite database file is created automatically in backend instance folder.
 - If port `5173` is busy, Vite selects another port (for example `5174`).
+
+## Deploy On Railway
+
+This project is configured for **single-service Railway deploy** using `Dockerfile`.
+Railway will run Flask API + built React frontend on one live URL.
+
+### Steps
+
+1. Push this project to GitHub.
+2. In Railway, click **New Project** -> **Deploy from GitHub Repo**.
+3. Select this repository.
+4. Railway detects `Dockerfile` and builds automatically.
+5. Add environment variables in Railway service:
+   - `SECRET_KEY` = any strong random string
+   - `JWT_SECRET_KEY` = any strong random string
+6. Deploy and open generated Railway domain.
+
+### Optional: Persistent Database
+
+Current default uses SQLite (file-based). For production persistence across redeploys, use Railway Postgres:
+
+1. Add a Postgres plugin in Railway project.
+2. Set `DATABASE_URL` in service variables to the provided Postgres connection string.
+3. Redeploy.
